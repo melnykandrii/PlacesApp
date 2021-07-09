@@ -36,7 +36,7 @@ export const RobotItem = ({ id, name, email }) => {
 const styles = StyleSheet.create({
   robotItem: {
     height: 300,
-    margin: 20,
+    margin: 10,
     width: "60%",
     alignSelf: "center",
     backgroundColor: "#20B2AA",
