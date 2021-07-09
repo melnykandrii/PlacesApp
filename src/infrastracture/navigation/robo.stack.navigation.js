@@ -14,6 +14,7 @@ export const RoboStackNavigator = () => {
       initialRouteName="Robots"
       screenOptions={() => ({
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleAlign: "center",
       })}
     >
       <RoboStack.Screen

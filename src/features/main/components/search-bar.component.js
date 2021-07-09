@@ -11,7 +11,6 @@ const Search = styled(Searchbar)`
 `;
 
 export const SearchBar = ({ filter, onFilter }) => {
-  console.log(filter);
   return (
     <Search
       value={filter}

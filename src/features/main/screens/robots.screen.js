@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Button,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Button } from "react-native";
 import { RobotList } from "../components/robots-list.component";
 import { SearchBar } from "../components/search-bar.component";
 import { robots } from "../../../services/first/robots";
