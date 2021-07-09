@@ -12,12 +12,15 @@ export const RoboStackNavigator = () => {
   return (
     <RoboStack.Navigator
       initialRouteName="Robots"
-      headerMode="none"
       screenOptions={() => ({
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       })}
     >
-      <RoboStack.Screen name="Robots" component={RobotsScreen} />
+      <RoboStack.Screen
+        name="Robots"
+        component={RobotsScreen}
+        options={{ title: "Robo Friends" }}
+      />
       <RoboStack.Screen name="Test" component={TestScreen} />
     </RoboStack.Navigator>
   );

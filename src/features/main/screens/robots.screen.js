@@ -1,16 +1,34 @@
-import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { RobotList } from "../components/robots-list.component";
+import { SearchBar } from "../components/search-bar.component";
+import { robots } from "../../../services/first/robots";
 
 export const RobotsScreen = ({ navigation }) => {
+  const [filter, setFilter] = useState("");
+
+  const onFilterChange = (text) => {
+    setFilter(text);
+  };
+
+  const filterRobot = robots.filter((robot) => {
+    return robot.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase());
+  });
+
   return (
     <>
       <View style={styles.searchContainer}>
-        <Text>Hi</Text>
+        <SearchBar onFilter={onFilterChange} filter={filter} />
       </View>
 
       <View style={styles.listContainer}>
-        <RobotList />
+        <RobotList robots={filterRobot} />
       </View>
       <View>
         <Button
@@ -24,10 +42,10 @@ export const RobotsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   searchContainer: {
-    backgroundColor: "red",
     flex: 1,
   },
   listContainer: {
+    padding: 5,
     flex: 9,
   },
 });

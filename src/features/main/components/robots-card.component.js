@@ -21,7 +21,7 @@ export const RobotItem = ({ id, name, email }) => {
         <View styel={styles.imageContainer}>
           <Image
             style={styles.bgImage}
-            source={{ uri: `https://robohash.org/${id}` }}
+            source={{ uri: `https://robohash.org/name+${id}` }}
           />
         </View>
         <View style={styles.titleContainer}>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     overflow:
       Platform.OS === "android" && Platform.Version >= 21
         ? "visible"
-        : "visible",
+        : "hidden",
     elevation: 5,
   },
   bgImage: {
