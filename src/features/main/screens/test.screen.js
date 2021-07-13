@@ -1,67 +1,108 @@
-import React from "react";
+import React, { useState } from "react";
+import { View, StyleSheet, FlatList } from "react-native";
+import { SearchBar } from "../components/search-bar.component";
+import { robots } from "../../../services/first/robots";
 import {
-  SafeAreaView,
-  View,
-  FlatList,
-  StyleSheet,
   Text,
-  StatusBar,
+  Image,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  Platform,
 } from "react-native";
 
-const DATA = [
-  {
-    id: 1,
-    name: "Leanne Graham",
-    username: "Bret",
-    email: "Sincere@april.biz",
-  },
-  {
-    id: 2,
-    name: "Ervin Howell",
-    username: "Antonette",
-    email: "Shanna@melissa.tv",
-  },
-  {
-    id: 3,
-    name: "Clementine Bauch",
-    username: "Samantha",
-    email: "Nathan@yesenia.net",
-  },
-];
+export const TestScreen = ({ navigation }) => {
+  let TouchableCmp = TouchableNativeFeedback;
+  if (Platform.OS === "ios") {
+    TouchableCmp = TouchableOpacity;
+  }
+  const [filter, setFilter] = useState("");
 
-const Item = ({ name, email }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{name}</Text>
-    <Text>{email}</Text>
-  </View>
-);
+  const onFilterChange = (text) => {
+    setFilter(text);
+  };
 
-export const TestScreen = () => {
-  const renderItem = ({ item }) => <Item name={item.name} email={item.email} />;
+  const filteredRobot = robots.filter((robot) => {
+    return robot.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase());
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </SafeAreaView>
+    <>
+      <View style={styles.searchContainer}>
+        <SearchBar onFilter={onFilterChange} filter={filter} />
+      </View>
+
+      <View style={styles.listContainer}>
+        <FlatList
+          data={filteredRobot}
+          renderItem={({ item }) => (
+            <TouchableCmp
+              useForeground
+              onPress={() =>
+                navigation.navigate("TestDetails", {
+                  itemId: item.id,
+                  item: item,
+                })
+              }
+              background={TouchableNativeFeedback.Ripple("#AAF", true)}
+            >
+              <View style={styles.robotItem}>
+                <View styel={styles.imageContainer}>
+                  <Image
+                    style={styles.bgImage}
+                    source={{ uri: `https://robohash.org/name+${item.id}` }}
+                  />
+                </View>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{item.name}</Text>
+                  <Text>{item.email}</Text>
+                </View>
+              </View>
+            </TouchableCmp>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  searchContainer: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
   },
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+  listContainer: {
+    padding: 5,
+    flex: 9,
+  },
+  robotItem: {
+    height: 300,
+    margin: 10,
+    width: "60%",
+    alignSelf: "center",
+    backgroundColor: "#20B2AA",
+    borderRadius: 10,
+    overflow:
+      Platform.OS === "android" && Platform.Version >= 21
+        ? "visible"
+        : "hidden",
+    elevation: 5,
+  },
+  bgImage: {
+    width: "80%",
+    height: "80%",
+    alignSelf: "center",
+  },
+  titleContainer: {
+    flex: 4,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    padding: 10,
+    paddingHorizontal: 12,
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: 32,
+    fontSize: 18,
+    color: "black",
+    textAlign: "center",
   },
 });

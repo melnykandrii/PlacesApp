@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, Image, Platform, StyleSheet } from "react-native";
+import { Card } from "react-native-paper";
 
-export const RobotItem = ({ robot }) => {
+export const TestItem = ({ robot }) => {
   return (
     <View style={styles.robotItem}>
       <View styel={styles.imageContainer}>
@@ -42,7 +43,6 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "rgba(0,0,0,0.1)",
     padding: 10,
-    borderRadius: 10,
     paddingHorizontal: 12,
     alignItems: "center",
     justifyContent: "space-between",

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button } from "react-native";
-import { RobotList } from "../components/robots-list.component";
+import { View, StyleSheet, FlatList } from "react-native";
 import { SearchBar } from "../components/search-bar.component";
+import { RobotItem } from "../components/robots-card.component";
 import { robots } from "../../../services/first/robots";
+import {
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  Platform,
+} from "react-native";
 
 export const RobotsScreen = ({ navigation }) => {
   const [filter, setFilter] = useState("");
@@ -11,10 +16,14 @@ export const RobotsScreen = ({ navigation }) => {
     setFilter(text);
   };
 
-  const filterRobot = robots.filter((robot) => {
+  const filteredRobot = robots.filter((robot) => {
     return robot.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase());
   });
 
+  let TouchableCmp = TouchableOpacity;
+  if (Platform.OS === "android" && Platform.Version === 21) {
+    TouchableCmp = TouchableNativeFeedback;
+  }
   return (
     <>
       <View style={styles.searchContainer}>
@@ -22,12 +31,21 @@ export const RobotsScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.listContainer}>
-        <RobotList robots={filterRobot} />
-      </View>
-      <View>
-        <Button
-          title="Next Screen"
-          onPress={() => navigation.navigate("Test")}
+        <FlatList
+          data={filteredRobot}
+          renderItem={({ item }) => (
+            <TouchableCmp
+              onPress={() =>
+                navigation.navigate("RobotDetails", {
+                  itemId: item.id,
+                  item: item,
+                })
+              }
+            >
+              <RobotItem robot={item} />
+            </TouchableCmp>
+          )}
+          keyExtractor={(item) => item.id.toString()}
         />
       </View>
     </>

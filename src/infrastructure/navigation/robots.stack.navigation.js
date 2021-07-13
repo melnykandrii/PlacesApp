@@ -4,11 +4,11 @@ import {
   CardStyleInterpolators,
 } from "@react-navigation/stack";
 import { RobotsScreen } from "../../features/main/screens/robots.screen";
-import { TestScreen } from "../../features/main/screens/test.screen";
+import { RobotsDetailsScreen } from "../../features/main/screens/robots-details.screen";
 
 const RoboStack = createStackNavigator();
 
-export const RoboStackNavigator = () => {
+export const RobotsStackNavigator = () => {
   return (
     <RoboStack.Navigator
       initialRouteName="Robots"
@@ -20,9 +20,9 @@ export const RoboStackNavigator = () => {
       <RoboStack.Screen
         name="Robots"
         component={RobotsScreen}
-        options={{ title: "Robo Friends" }}
+        options={{ title: "Robots Friends" }}
       />
-      <RoboStack.Screen name="Test" component={TestScreen} />
+      <RoboStack.Screen name="RobotDetails" component={RobotsDetailsScreen} />
     </RoboStack.Navigator>
   );
 };
