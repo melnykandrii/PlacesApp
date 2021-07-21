@@ -4,7 +4,7 @@ import {
   CardCover,
   CardTitle,
   CardDescription,
-} from "../styles/card.styles";
+} from "../styles/robot-card.styles";
 
 export const RobotCard = ({ onPress, onLongPress, robot, props }) => (
   <CardView {...props} onPress={onPress} onLongPress={onLongPress}>

@@ -3,7 +3,7 @@ import {
   ItemContainer,
   IconContainer,
   DataContainer,
-} from "../styles/modal.styles";
+} from "../styles/robot-modal.styles";
 import { ModalIcon } from "../../../components/icons/icon.modal.component";
 import { Text } from "../../../components/typography/text.component";
 

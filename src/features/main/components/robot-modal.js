@@ -11,7 +11,7 @@ import {
   DetailsContainer,
   RowContainer,
   ButtonContainer,
-} from "../styles/modal.styles";
+} from "../styles/robot-modal.styles";
 import { BodyButton } from "../../../components/buttons/body.buttons";
 import { InteractionComponent } from "./interaction.component";
 

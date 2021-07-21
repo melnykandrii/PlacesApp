@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
 import { ImageBack, TitleContainer } from "../styles/details.styles";
 import { Text } from "../../../components/typography/text.component";
-import { RowContainer } from "../styles/modal.styles";
+import { RowContainer } from "../styles/robot-modal.styles";
 import { InteractionComponent } from "../components/interaction.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 

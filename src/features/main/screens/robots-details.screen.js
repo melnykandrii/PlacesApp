@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import {
-  ImageBack,
-  TitleContainer,
-  BottomContainer,
-} from "../styles/details.styles";
+
 import { Text } from "../../../components/typography/text.component";
-import { RowContainer } from "../styles/modal.styles";
+import { RowContainer } from "../styles/robot-modal.styles";
 import { InteractionComponent } from "../components/interaction.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { BodyButton } from "../../../components/buttons/body.buttons";
@@ -14,6 +10,9 @@ import {
   ImageContainer,
   ScrollContainer,
   ButtonContainer,
+  ImageBack,
+  TitleContainer,
+  BottomContainer,
 } from "../styles/robot-datails.styles";
 
 export const RobotsDetailsScreen = ({ route }) => {
