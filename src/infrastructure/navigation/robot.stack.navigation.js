@@ -3,14 +3,15 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import { RobotsTestScreen } from "../../features/main/screens/robot.test.screen";
-import { NewScreen } from "../../features/main/screens/new.screen";
+import { RobotScreen } from "../../features/main/screens/robot.screen";
+import { RobotsDetailsScreen } from "../../features/main/screens/robots-details.screen";
 
 const NewStack = createStackNavigator();
 
-export const NewStackNavigator = () => {
+export const RobotStackNavigator = () => {
   return (
     <NewStack.Navigator
+      headerMode="none"
       initialRouteName="RT"
       screenOptions={() => ({
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -19,10 +20,10 @@ export const NewStackNavigator = () => {
     >
       <NewStack.Screen
         name="RT"
-        component={RobotsTestScreen}
-        options={{ title: "Robots Friends" }}
+        component={RobotScreen}
+        options={{ title: "Accounts" }}
       />
-      <NewStack.Screen name="NewScreen" component={NewScreen} />
+      <NewStack.Screen name="RobotDetail" component={RobotsDetailsScreen} />
     </NewStack.Navigator>
   );
 };

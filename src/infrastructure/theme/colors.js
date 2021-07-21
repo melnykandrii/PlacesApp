@@ -5,10 +5,13 @@ export const colors = {
     muted: "#C6DAF7",
     transparent: "transparent",
     spring: "#2E8B57",
+    aqua: "#7FFFD4",
   },
   ui: {
     primary: "#262626",
     secondary: "#757575",
+    bg: "rgba(0,0,0,0.2)",
+    transparent: "transparent",
     tertiary: "#F1F1F1",
     quaternary: "#FFFFFF",
     disabled: "#DEDEDE",

@@ -3,26 +3,26 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import { RobotsScreen } from "../../features/main/screens/robots.screen";
-import { RobotsDetailsScreen } from "../../features/main/screens/robots-details.screen";
+import { AccountScreen } from "../../features/main/screens/account.screen";
+import { AccountDetailsScreen } from "../../features/main/screens/account-details.screen";
 
 const RoboStack = createStackNavigator();
 
-export const RobotsStackNavigator = () => {
+export const AccountStackNavigator = () => {
   return (
     <RoboStack.Navigator
-      initialRouteName="Robots"
+      initialRouteName="Account"
       screenOptions={() => ({
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         headerTitleAlign: "center",
       })}
     >
       <RoboStack.Screen
-        name="Robots"
-        component={RobotsScreen}
-        options={{ title: "Robots Friends" }}
+        name="Account"
+        component={AccountScreen}
+        options={{ title: "Friends" }}
       />
-      <RoboStack.Screen name="RobotDetails" component={RobotsDetailsScreen} />
+      <RoboStack.Screen name="RobotDetails" component={AccountDetailsScreen} />
     </RoboStack.Navigator>
   );
 };
