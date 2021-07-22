@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
 import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
-import { TabsNavigator } from "./src/infrastructure/navigation/tabs.navigation";
+import { PlacesStackNavigator } from "./src/infrastructure/navigation/places-stack.navigation";
 import { ThemeProvider } from "styled-components/native";
 import {
   useFonts as useOswald,
@@ -37,7 +37,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <SafeAreaView style={styles.container}>
-            <TabsNavigator />
+            <PlacesStackNavigator />
           </SafeAreaView>
           <ExpoStatusBar style="auto" />
         </NavigationContainer>
