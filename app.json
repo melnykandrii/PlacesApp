@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RoboApp",
-    "slug": "RoboApp",
+    "name": "PlacesApp",
+    "slug": "Application wich uses native devices components",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
