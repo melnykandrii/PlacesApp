@@ -11,7 +11,7 @@ import {
 import { Button } from "react-native-paper";
 import { SearchBar } from "../components/search-bar.component";
 import { AccountItem } from "../components/account-card.component";
-import theme from "../../../infrastructure/theme";
+import { theme } from "../../../infrastructure/theme";
 
 export const PlacesScreen = ({ navigation }) => {
   const [accounts, setAccounts] = useState([]);
@@ -67,7 +67,7 @@ export const PlacesScreen = ({ navigation }) => {
         style={styles.fav}
         theme={{
           colors: {
-            primary: "white",
+            primary: theme.colors.bg.primary,
           },
         }}
       >
@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
     right: deviceWidth,
     zIndex: 9,
     borderWidth: 2,
-    backgroundColor: "red",
+    backgroundColor: theme.colors.brand.primary,
     height: ButtonSizeH,
     width: ButtonSizeW,
     justifyContent: "center",
-    borderColor: "white",
+    borderColor: theme.colors.bg.primary,
     borderRadius: 10,
   },
   searchContainer: {

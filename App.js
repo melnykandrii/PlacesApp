@@ -15,6 +15,16 @@ import {
   Domine_400Regular,
 } from "@expo-google-fonts/domine";
 import { theme } from "./src/infrastructure/theme";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
+import placesReducer from "./src/services/store/reducers/places-reducers";
+
+const rootReducer = combineReducers({
+  places: placesReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -35,12 +45,14 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <SafeAreaView style={styles.container}>
-            <PlacesStackNavigator />
-          </SafeAreaView>
-          <ExpoStatusBar style="auto" />
-        </NavigationContainer>
+        <Provider store={store}>
+          <NavigationContainer>
+            <SafeAreaView style={styles.container}>
+              <PlacesStackNavigator />
+            </SafeAreaView>
+            <ExpoStatusBar style="auto" />
+          </NavigationContainer>
+        </Provider>
       </ThemeProvider>
     </>
   );
