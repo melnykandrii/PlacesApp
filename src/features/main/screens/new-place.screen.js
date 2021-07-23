@@ -28,11 +28,17 @@ export const NewPlaceScreen = ({ navigation }) => {
           Title
         </Text>
         <TextInput
+          placeholder="Place Title"
           style={styles.input}
           value={titleValue}
           onChangeText={titleChangeHandler}
         />
-        <Button title="Save" onPress={savePlaceHandler} style={styles.button} />
+        <Button
+          title="Save"
+          onPress={savePlaceHandler}
+          style={styles.button}
+          disabled={titleValue.length <= 2 ? true : false}
+        />
       </View>
     </ScrollView>
   );

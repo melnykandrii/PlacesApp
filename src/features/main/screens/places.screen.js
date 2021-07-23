@@ -1,40 +1,34 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  Platform,
-  TouchableNativeFeedback,
-  FlatList,
-} from "react-native";
+import { View, Dimensions, StyleSheet, FlatList } from "react-native";
 import { Button } from "react-native-paper";
+import { Text } from "../../../components/typography/text.component";
 import { SearchBar } from "../components/search-bar.component";
-import { AccountItem } from "../components/account-card.component";
+import { PlaceItem } from "../components/place-item.component";
 import { theme } from "../../../infrastructure/theme";
+import { useSelector } from "react-redux";
 
 export const PlacesScreen = ({ navigation }) => {
-  const [accounts, setAccounts] = useState([]);
+  const places = useSelector((state) => state.places.places);
+  //const [displayPlace, setdisplayPlace] = useState(places);
   const [searchfield, setSearchfield] = useState("");
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) => setAccounts(users));
-  });
 
   const onFilterChange = (text) => {
     setSearchfield(text);
   };
 
-  const filteredAccount = accounts.filter((a) => {
-    return a.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase());
+  const filteredPlaces = places.filter((a) => {
+    return a.title
+      .toLocaleLowerCase()
+      .includes(searchfield.toLocaleLowerCase());
   });
+  /*
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) => setAccounts(users));
+  });
+*/
 
-  let TouchableCmp = TouchableOpacity;
-  if (Platform.OS === "android" && Platform.Version === 21) {
-    TouchableCmp = TouchableNativeFeedback;
-  }
   return (
     <>
       <View style={styles.searchContainer}>
@@ -42,22 +36,24 @@ export const PlacesScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.listContainer}>
-        <FlatList
-          data={filteredAccount}
-          renderItem={({ item }) => (
-            <TouchableCmp
-              onPress={() =>
-                navigation.navigate("Details", {
-                  itemId: item.id,
-                  item: item,
-                })
-              }
-            >
-              <AccountItem robot={item} />
-            </TouchableCmp>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        {filteredPlaces == 0 ? (
+          <View style={styles.emptyScreen}>
+            <Text>No results</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={filteredPlaces}
+            renderItem={({ item }) => (
+              <PlaceItem
+                image={null}
+                title={item.title}
+                address={null}
+                onSelect={() => navigation.navigate("Details", { item: item })}
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        )}
       </View>
 
       <Button
@@ -101,5 +97,10 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 5,
     flex: 9,
+  },
+  emptyScreen: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

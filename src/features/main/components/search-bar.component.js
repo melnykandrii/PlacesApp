@@ -5,7 +5,7 @@ export const SearchBar = ({ filter, onFilter }) => {
   return (
     <Search
       value={filter}
-      placeholder="Search for Robots"
+      placeholder="Search for places"
       onChangeText={onFilter}
     />
   );
