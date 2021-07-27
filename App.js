@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
 import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
-import { TabsNavigator } from "./src/infrastructure/navigation/tabs.navigation";
+import { PlacesStackNavigator } from "./src/infrastructure/navigation/places-stack.navigation";
 import { ThemeProvider } from "styled-components/native";
 import {
   useFonts as useOswald,
@@ -15,6 +15,16 @@ import {
   Domine_400Regular,
 } from "@expo-google-fonts/domine";
 import { theme } from "./src/infrastructure/theme";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
+import placesReducer from "./src/services/store/reducers/places-reducers";
+
+const rootReducer = combineReducers({
+  places: placesReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -35,12 +45,14 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <SafeAreaView style={styles.container}>
-            <TabsNavigator />
-          </SafeAreaView>
-          <ExpoStatusBar style="auto" />
-        </NavigationContainer>
+        <Provider store={store}>
+          <NavigationContainer>
+            <SafeAreaView style={styles.container}>
+              <PlacesStackNavigator />
+            </SafeAreaView>
+            <ExpoStatusBar style="auto" />
+          </NavigationContainer>
+        </Provider>
       </ThemeProvider>
     </>
   );
