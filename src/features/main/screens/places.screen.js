@@ -5,10 +5,22 @@ import { Text } from "../../../components/typography/text.component";
 import { SearchBar } from "../components/search-bar.component";
 import { PlaceItem } from "../components/place-item.component";
 import { theme } from "../../../infrastructure/theme";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as placesActions from "../../../services/store/actions/places-actions";
+
+const ButtonSizeH = 50;
+const ButtonSizeW = 140;
+const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
+const deviceHeight = Dimensions.get("window").height / 1.2;
 
 export const PlacesScreen = ({ navigation }) => {
   const places = useSelector((state) => state.places.places);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(placesActions.loadPlaces());
+  }, [dispatch]);
+
   //const [displayPlace, setdisplayPlace] = useState(places);
   const [searchfield, setSearchfield] = useState("");
 
@@ -72,10 +84,6 @@ export const PlacesScreen = ({ navigation }) => {
     </>
   );
 };
-const ButtonSizeH = 50;
-const ButtonSizeW = 140;
-const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
-const deviceHeight = Dimensions.get("window").height / 1.2;
 
 const styles = StyleSheet.create({
   fav: {
