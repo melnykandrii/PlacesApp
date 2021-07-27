@@ -22,9 +22,7 @@ import placesReducer from "./src/services/store/reducers/places-reducers";
 import { init } from "./src/services/helper/db";
 
 init()
-  .then(() => {
-    console.log("Initialized database");
-  })
+  .then(() => {})
   .catch((err) => {
     console.log("Initialized db failed");
     console.log(err);
