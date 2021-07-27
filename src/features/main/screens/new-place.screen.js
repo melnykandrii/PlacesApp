@@ -3,9 +3,12 @@ import { View, Button, TextInput, ScrollView, StyleSheet } from "react-native";
 import { Text } from "../../../components/typography/text.component";
 import { useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
+import { ImgPicker } from "../components/image-picker.component";
+import { theme } from "../../../infrastructure/theme";
 
 export const NewPlaceScreen = ({ navigation }) => {
   const [titleValue, setTitleValue] = useState("");
+  const [placeImage, setPlaceImage] = useState();
 
   const dispatch = useDispatch();
 
@@ -13,8 +16,12 @@ export const NewPlaceScreen = ({ navigation }) => {
     setTitleValue(text);
   };
 
+  const placeImageHandler = (image) => {
+    setPlaceImage(image);
+  };
+
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue));
+    dispatch(placesActions.addPlace(titleValue, placeImage));
     navigation.goBack();
   };
 
@@ -33,10 +40,11 @@ export const NewPlaceScreen = ({ navigation }) => {
           value={titleValue}
           onChangeText={titleChangeHandler}
         />
+        <ImgPicker onImageTaken={placeImageHandler} />
         <Button
+          style={styles.button}
           title="Save"
           onPress={savePlaceHandler}
-          style={styles.button}
           disabled={titleValue.length <= 2 ? true : false}
         />
       </View>
@@ -57,5 +65,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 2,
   },
-  button: { margin: 60 },
+  button: {
+    borderWidth: 2,
+    backgroundColor: theme.colors.brand.primary,
+    height: 50,
+    width: 140,
+    justifyContent: "center",
+    borderColor: theme.colors.bg.primary,
+    borderRadius: 10,
+  },
 });

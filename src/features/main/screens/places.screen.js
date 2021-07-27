@@ -45,7 +45,7 @@ export const PlacesScreen = ({ navigation }) => {
             data={filteredPlaces}
             renderItem={({ item }) => (
               <PlaceItem
-                image={null}
+                image={item.imageUri}
                 title={item.title}
                 address={null}
                 onSelect={() => navigation.navigate("Details", { item: item })}
