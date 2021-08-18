@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View, Button, TextInput, ScrollView, StyleSheet } from "react-native";
 import { Text } from "../../../components/typography/text.component";
 import { useDispatch } from "react-redux";
@@ -6,10 +6,12 @@ import * as placesActions from "../../../services/store/actions/places-actions";
 import { ImgPicker } from "../components/image-picker.component";
 import { theme } from "../../../infrastructure/theme";
 import { LocationPicker } from "../components/location-picker.component";
+import { BackButton } from "../../../components/buttons/goBack-button.component";
 
-export const NewPlaceScreen = ({ navigation }) => {
+export const NewPlaceScreen = ({ navigation, route }) => {
   const [titleValue, setTitleValue] = useState("");
   const [placeImage, setPlaceImage] = useState();
+  const [selectedLocation, setSelectedLocation] = useState();
 
   const dispatch = useDispatch();
 
@@ -21,36 +23,51 @@ export const NewPlaceScreen = ({ navigation }) => {
     setPlaceImage(image);
   };
 
+  const locationPickedHandler = useCallback((location) => {
+    setSelectedLocation(location);
+  }, []);
+
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue, placeImage));
+    dispatch(placesActions.addPlace(titleValue, placeImage, selectedLocation));
     navigation.goBack();
   };
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Text variant="header" style={styles.header}>
-          New Place
-        </Text>
-        <Text variant="body" style={styles.title}>
-          Title
-        </Text>
-        <TextInput
-          placeholder="Place Title"
-          style={styles.input}
-          value={titleValue}
-          onChangeText={titleChangeHandler}
-        />
-        <ImgPicker onImageTaken={placeImageHandler} />
-        <LocationPicker />
-        <Button
-          style={styles.button}
-          title="Save"
-          onPress={savePlaceHandler}
-          disabled={titleValue.length <= 2 ? true : false}
-        />
-      </View>
-    </ScrollView>
+    <>
+      <BackButton
+        title=""
+        icon="keyboard-backspace"
+        onPress={() => navigation.goBack()}
+      />
+      <ScrollView>
+        <View style={styles.form}>
+          <Text variant="header" style={styles.header}>
+            New Place
+          </Text>
+          <Text variant="body" style={styles.title}>
+            Title
+          </Text>
+          <TextInput
+            placeholder="Place Title"
+            style={styles.input}
+            value={titleValue}
+            onChangeText={titleChangeHandler}
+          />
+          <ImgPicker onImageTaken={placeImageHandler} />
+          <LocationPicker
+            navigation={navigation}
+            route={route}
+            onLocationPicked={locationPickedHandler}
+          />
+          <Button
+            style={styles.button}
+            title="Save"
+            onPress={savePlaceHandler}
+            disabled={titleValue.length <= 2 ? true : false}
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

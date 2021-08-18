@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { View, Dimensions, StyleSheet, FlatList } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 import { Button } from "react-native-paper";
 import { Text } from "../../../components/typography/text.component";
 import { SearchBar } from "../components/search-bar.component";
@@ -14,12 +20,31 @@ const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
 const deviceHeight = Dimensions.get("window").height / 1.2;
 
 export const PlacesScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const places = useSelector((state) => state.places.places);
   const dispatch = useDispatch();
 
+  const loadPlacesHandler = useCallback(async () => {
+    console.log("load Places");
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(placesActions.loadPlaces());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [dispatch, setError, setIsLoading]);
+
   useEffect(() => {
-    dispatch(placesActions.loadPlaces());
-  }, [dispatch]);
+    loadPlacesHandler();
+  }, [dispatch, loadPlacesHandler]);
+
+  useEffect(() => {
+    const willFocus = navigation.addListener("focus", loadPlacesHandler);
+    return willFocus;
+  }, [loadPlacesHandler, navigation]);
 
   //const [displayPlace, setdisplayPlace] = useState(places);
   const [searchfield, setSearchfield] = useState("");
@@ -48,18 +73,44 @@ export const PlacesScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.listContainer}>
-        {filteredPlaces == 0 ? (
-          <View style={styles.emptyScreen}>
-            <Text>No results</Text>
+        {isLoading && (
+          <View style={styles.centered}>
+            <ActivityIndicator
+              size="large"
+              color={theme.colors.brand.primary}
+            />
+            <Text variant="load">Loading...</Text>
           </View>
-        ) : (
+        )}
+        {!isLoading && !error && filteredPlaces.length === 0 && (
+          <View style={styles.centered}>
+            <Text>No results. Please try again.</Text>
+          </View>
+        )}
+        {!isLoading && error && (
+          <View style={styles.centered}>
+            <Text>An error occurred. Please try again.</Text>
+            <Button
+              mode="text"
+              onPress={loadPlacesHandler}
+              theme={{
+                colors: {
+                  primary: theme.colors.brand.primary,
+                },
+              }}
+            >
+              Try again
+            </Button>
+          </View>
+        )}
+        {filteredPlaces && (
           <FlatList
             data={filteredPlaces}
             renderItem={({ item }) => (
               <PlaceItem
                 image={item.imageUri}
                 title={item.title}
-                address={null}
+                address={item.address}
                 onSelect={() => navigation.navigate("Details", { item: item })}
               />
             )}
@@ -106,9 +157,9 @@ const styles = StyleSheet.create({
     padding: 5,
     flex: 9,
   },
-  emptyScreen: {
+  centered: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
 });

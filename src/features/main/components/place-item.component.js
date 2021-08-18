@@ -41,9 +41,11 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 18,
     marginBottom: 5,
+    paddingHorizontal: 10,
   },
   address: {
     color: "#666",
     fontSize: 16,
+    paddingHorizontal: 10,
   },
 });
