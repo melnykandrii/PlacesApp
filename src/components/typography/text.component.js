@@ -30,6 +30,10 @@ const error = (theme) => `
     color: ${theme.colors.text.error};
 `;
 
+const load = (theme) => `
+    color: ${theme.colors.brand.primary};
+`;
+
 const caption = (theme) => `
     font-size: ${theme.fontSizes.caption};
     font-weight: ${theme.fontWeights.bold};
@@ -54,6 +58,7 @@ const variants = {
   label,
   caption,
   error,
+  load,
   hint,
   button,
 };
