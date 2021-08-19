@@ -2,26 +2,14 @@ import * as FileSystem from "expo-file-system";
 import { insertPlace, fetchPlaces } from "../../helper/db";
 import ENV from "../../../../env";
 import Place from "../../models/place";
+import { locationRequest } from "../../location/location.service";
 
 export const ADD_PLACE = "ADD_PLACE";
 export const SET_PLACES = "SET PLACES";
 
 export const addPlace = (title, image, location) => {
   return async (dispatch) => {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.lat},${location.lng}&key=${ENV.googleApiKey}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Something went wrong!");
-    }
-
-    const resData = await response.json();
-    // console.log(resData);
-    if (!resData.results) {
-      throw new Error("Something went wrong!");
-    }
-    const address = resData.results[0].formatted_address;
+    const address = await locationRequest(location);
 
     const fileName = image.split("/").pop();
     const newPath = FileSystem.documentDirectory + fileName;
@@ -51,8 +39,6 @@ export const addPlace = (title, image, location) => {
           }),
         }
       );
-
-      const rData = await responFire.json();
 
       dispatch({
         type: ADD_PLACE,
