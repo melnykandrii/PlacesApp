@@ -9,8 +9,13 @@ import { LocationPicker } from "../components/location-picker.component";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
 
 export const NewPlaceScreen = ({ navigation, route }) => {
-  const [titleValue, setTitleValue] = useState("");
-  const [placeImage, setPlaceImage] = useState();
+  const { item, edit } = route.params ? route.params : {};
+  const [titleValue, setTitleValue] = useState(
+    route.params && edit ? item.title : ""
+  );
+  const [placeImage, setPlaceImage] = useState(
+    route.params && edit ? item.imageUri : null
+  );
   const [selectedLocation, setSelectedLocation] = useState();
 
   const dispatch = useDispatch();
@@ -32,6 +37,10 @@ export const NewPlaceScreen = ({ navigation, route }) => {
     navigation.goBack();
   };
 
+  const updatePlaceHandler = () => {
+    navigation.goBack();
+  };
+
   return (
     <>
       <BackButton
@@ -42,7 +51,7 @@ export const NewPlaceScreen = ({ navigation, route }) => {
       <ScrollView>
         <View style={styles.form}>
           <Text variant="header" style={styles.header}>
-            New Place
+            {route.params ? "Edit Place" : "New Place"}
           </Text>
           <Text variant="body" style={styles.title}>
             Title
@@ -53,7 +62,7 @@ export const NewPlaceScreen = ({ navigation, route }) => {
             value={titleValue}
             onChangeText={titleChangeHandler}
           />
-          <ImgPicker onImageTaken={placeImageHandler} />
+          <ImgPicker onImageTaken={placeImageHandler} placeImage={placeImage} />
           <LocationPicker
             navigation={navigation}
             route={route}
@@ -62,7 +71,9 @@ export const NewPlaceScreen = ({ navigation, route }) => {
           <Button
             style={styles.button}
             title="Save"
-            onPress={savePlaceHandler}
+            onPress={
+              route.params && edit ? updatePlaceHandler : savePlaceHandler
+            }
             disabled={titleValue.length <= 2 ? true : false}
           />
         </View>

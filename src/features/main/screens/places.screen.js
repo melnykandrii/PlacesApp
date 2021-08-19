@@ -26,7 +26,6 @@ export const PlacesScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const loadPlacesHandler = useCallback(async () => {
-    console.log("load Places");
     setError(null);
     setIsLoading(true);
     try {

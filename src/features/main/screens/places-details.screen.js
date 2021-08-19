@@ -23,7 +23,11 @@ export const DetailsScreen = ({ route, navigation }) => {
   };
 
   const onEditHandler = () => {
-    navigation.navigate("EditScreen", { item: item });
+    navigation.navigate("NewPlace", {
+      item: item,
+      edit: true,
+      mapPickedLocation: placesLocation,
+    });
   };
 
   const deletePlaceHandler = () => {
