@@ -86,7 +86,6 @@ export const LocationPicker = ({ navigation, route, onLocationPicked }) => {
   const pickOnMapHandler = () => {
     navigation.navigate("Map", {
       prevLocation: pickedLocation,
-      prevRegion: prevRegion,
     });
   };
 

@@ -1,4 +1,4 @@
-import { ADD_PLACE, SET_PLACES } from "../actions/places-actions";
+import { ADD_PLACE, SET_PLACES, DELETE_PLACE } from "../actions/places-actions";
 import Place from "../../models/place";
 
 const initialState = {
@@ -6,6 +6,11 @@ const initialState = {
 };
 export default (state = initialState, action) => {
   switch (action.type) {
+    case DELETE_PLACE:
+      return {
+        ...state,
+        places: state.places.filter((pl) => pl.id !== action.pid),
+      };
     case SET_PLACES:
       return {
         places: action.places.map(

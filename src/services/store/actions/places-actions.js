@@ -1,11 +1,15 @@
 import * as FileSystem from "expo-file-system";
 import { insertPlace, fetchPlaces } from "../../helper/db";
-import ENV from "../../../../env";
 import Place from "../../models/place";
 import { locationRequest } from "../../location/location.service";
 
 export const ADD_PLACE = "ADD_PLACE";
-export const SET_PLACES = "SET PLACES";
+export const SET_PLACES = "SET_PLACES";
+export const DELETE_PLACE = "DELETE_PLACE";
+
+export const deletePlace = (placeId) => {
+  return { type: DELETE_PLACE, pid: placeId };
+};
 
 export const addPlace = (title, image, location) => {
   return async (dispatch) => {
@@ -39,7 +43,6 @@ export const addPlace = (title, image, location) => {
           }),
         }
       );
-
       dispatch({
         type: ADD_PLACE,
         placeData: {

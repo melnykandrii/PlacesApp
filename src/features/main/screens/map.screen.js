@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, Dimensions, Platform } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import MapView, { Marker } from "react-native-maps";
 import { theme } from "../../../infrastructure/theme";
 import { Button } from "react-native-paper";
@@ -12,25 +11,29 @@ const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
 const deviceHeight = Dimensions.get("window").height / 1.2;
 
 export const MapScreen = ({ navigation, route }) => {
-  const [chosenLoction, setChosenLocation] = useState();
+  const prevData = route.params;
+  const initLocation = prevData.prevLocation;
+  const readOnly = prevData.readonly;
+  const PlaceTitle = prevData.title;
+  const [chosenLoction, setChosenLocation] = useState(initLocation);
+
   const [mapRegion, setMapRegion] = useState({
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: chosenLoction ? chosenLoction.lat : 37.78,
+    longitude: chosenLoction ? chosenLoction.lng : -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-
-  const prevData = route.params;
-  const onRegionChangeHandler = (region) => setMapRegion(region);
-
   useEffect(() => {
     if (prevData) {
       setChosenLocation(prevData.prevLocation);
-      setMapRegion(prevData.prevRegion);
     }
   }, [prevData]);
+  const onRegionChangeHandler = (region) => setMapRegion(region);
 
   const selectLocationHandler = (event) => {
+    if (readOnly) {
+      return;
+    }
     setChosenLocation({
       lat: event.nativeEvent.coordinate.latitude,
       lng: event.nativeEvent.coordinate.longitude,
@@ -68,12 +71,12 @@ export const MapScreen = ({ navigation, route }) => {
         {markerCoordinates && (
           <Marker
             draggable
-            title="My location"
+            title={prevData ? PlaceTitle : "My location"}
             coordinate={markerCoordinates}
           />
         )}
       </MapView>
-      {markerCoordinates && (
+      {markerCoordinates && !readOnly && (
         <Button
           icon="check"
           mode="text"

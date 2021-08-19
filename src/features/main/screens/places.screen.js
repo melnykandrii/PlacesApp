@@ -103,7 +103,7 @@ export const PlacesScreen = ({ navigation }) => {
             </Button>
           </View>
         )}
-        {filteredPlaces && (
+        {!isLoading && filteredPlaces && (
           <FlatList
             data={filteredPlaces}
             renderItem={({ item }) => (
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
   centered: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
 });

@@ -5,7 +5,7 @@ import { theme } from "../../../infrastructure/theme";
 import * as ImagePicker from "expo-image-picker";
 
 export const ImgPicker = (props) => {
-  const [pickedImage, setPickedImage] = useState();
+  const [pickedImage, setPickedImage] = useState(props.placeImage);
 
   const verifyCameraPermissions = async () => {
     const result = await ImagePicker.requestCameraPermissionsAsync();
