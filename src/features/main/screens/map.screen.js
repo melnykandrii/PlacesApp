@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, Dimensions, Platform } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { StyleSheet, Dimensions } from "react-native";
+import MapView, { Marker, Callout } from "react-native-maps";
 import { theme } from "../../../infrastructure/theme";
 import { Button } from "react-native-paper";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
+import { useSelector, useDispatch } from "react-redux";
+import * as placesActions from "../../../services/store/actions/places-actions";
+import { MapCallout } from "../components/map-callout.component";
 
 const ButtonSizeH = 50;
 const ButtonSizeW = 140;
@@ -11,11 +14,22 @@ const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
 const deviceHeight = Dimensions.get("window").height / 1.2;
 
 export const MapScreen = ({ navigation, route }) => {
-  const prevData = route.params;
-  const initLocation = prevData.prevLocation;
-  const readOnly = prevData.readonly;
-  const PlaceTitle = prevData.title;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [initMap, setInitMap] = useState(true);
+  const places = useSelector((state) => state.places.places);
+  const dispatch = useDispatch();
+  const prevData = useMemo(
+    () =>
+      route.params
+        ? route.params
+        : { prevLocation: null, readonly: true, initmap: true },
+    [route.params]
+  );
+  const initLocation = prevData.prevLocation ? prevData.prevLocation : null;
+  const PlaceTitle = prevData.title ? prevData.title : null;
   const [chosenLoction, setChosenLocation] = useState(initLocation);
+  const [readOnly, setReadOnly] = useState(true);
 
   const [mapRegion, setMapRegion] = useState({
     latitude: chosenLoction ? chosenLoction.lat : 37.78,
@@ -26,10 +40,26 @@ export const MapScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (prevData) {
       setChosenLocation(prevData.prevLocation);
+      setReadOnly(prevData.readonly);
+      setInitMap(prevData.initmap);
     }
   }, [prevData]);
-  const onRegionChangeHandler = (region) => setMapRegion(region);
+  const loadPlacesHandler = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(placesActions.loadPlaces());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [dispatch, setError, setIsLoading]);
 
+  useEffect(() => {
+    loadPlacesHandler();
+  }, [dispatch, loadPlacesHandler]);
+
+  const onRegionChangeHandler = (region) => setMapRegion(region);
   const selectLocationHandler = (event) => {
     if (readOnly) {
       return;
@@ -57,11 +87,13 @@ export const MapScreen = ({ navigation, route }) => {
 
   return (
     <>
-      <BackButton
-        title=""
-        icon="keyboard-backspace"
-        onPress={() => navigation.goBack()}
-      />
+      {!initMap && (
+        <BackButton
+          title=""
+          icon="keyboard-backspace"
+          onPress={() => navigation.goBack()}
+        />
+      )}
       <MapView
         style={styles.map}
         region={mapRegion}
@@ -71,10 +103,31 @@ export const MapScreen = ({ navigation, route }) => {
         {markerCoordinates && (
           <Marker
             draggable
-            title={prevData ? PlaceTitle : "My location"}
+            title={prevData && readOnly ? PlaceTitle : "My location"}
             coordinate={markerCoordinates}
           />
         )}
+        {readOnly &&
+          !route.params &&
+          places.map((item) => {
+            return (
+              <Marker
+                key={item.id}
+                title={item.title}
+                coordinate={{
+                  latitude: item.lat,
+                  longitude: item.lng,
+                }}
+              >
+                <Callout
+                  tooltip={true}
+                  onPress={() => navigation.navigate("Details", { item })}
+                >
+                  <MapCallout place={item} />
+                </Callout>
+              </Marker>
+            );
+          })}
       </MapView>
       {markerCoordinates && !readOnly && (
         <Button

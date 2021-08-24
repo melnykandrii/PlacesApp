@@ -5,6 +5,7 @@ import {
   Dimensions,
   StyleSheet,
   FlatList,
+  Alert,
 } from "react-native";
 import { Button } from "react-native-paper";
 import { Text } from "../../../components/typography/text.component";
@@ -57,13 +58,6 @@ export const PlacesScreen = ({ navigation }) => {
       .toLocaleLowerCase()
       .includes(searchfield.toLocaleLowerCase());
   });
-  /*
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) => setAccounts(users));
-  });
-*/
 
   return (
     <>

@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Image, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Button,
+  Alert,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 import { MapPreview } from "../components/map-preview.component";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
 import { Text } from "../../../components/typography/text.component";
@@ -9,14 +18,23 @@ import * as placesActions from "../../../services/store/actions/places-actions";
 import { EditButton } from "../../../components/buttons/edit.button.component";
 
 export const DetailsScreen = ({ route, navigation }) => {
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { item } = route.params;
   const placesLocation = { lat: item.lat, lng: item.lng };
   const placesTitle = item.title;
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error);
+    }
+  }, [error]);
+
   const showMapHandler = () => {
     navigation.navigate("Map", {
       readonly: true,
+      initmap: false,
       prevLocation: placesLocation,
       title: placesTitle,
     });
@@ -25,14 +43,31 @@ export const DetailsScreen = ({ route, navigation }) => {
   const onEditHandler = () => {
     navigation.navigate("NewPlace", {
       item: item,
+      itemId: item.id,
       edit: true,
       mapPickedLocation: placesLocation,
     });
   };
 
-  const deletePlaceHandler = () => {
-    dispatch(placesActions.deletePlace(item.id));
-    navigation.goBack();
+  const deletePlaceHandler = (id) => {
+    Alert.alert("Are you sure?", "Do you realy want to Delete this place?", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destractive",
+        onPress: async () => {
+          setError(null);
+          setIsLoading(true);
+          try {
+            await dispatch(placesActions.deletePlace(id));
+            navigation.goBack();
+          } catch (err) {
+            setError(err.message);
+          }
+          setIsLoading(false);
+        },
+      },
+    ]);
   };
 
   return (
@@ -67,7 +102,7 @@ export const DetailsScreen = ({ route, navigation }) => {
           <Button
             style={styles.button}
             title="Delete"
-            onPress={deletePlaceHandler}
+            onPress={deletePlaceHandler.bind(this, item.id)}
           />
         </View>
       </ScrollView>

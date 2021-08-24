@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
 import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
-import { PlacesStackNavigator } from "./src/infrastructure/navigation/places-stack.navigation";
 import { ThemeProvider } from "styled-components/native";
 import {
   useFonts as useOswald,
@@ -20,6 +19,7 @@ import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import placesReducer from "./src/services/store/reducers/places-reducers";
 import { init } from "./src/services/helper/db";
+import { TabsNavigator } from "./src/infrastructure/navigation/tabs.navigator";
 
 init()
   .then(() => {})
@@ -56,7 +56,7 @@ export default function App() {
         <Provider store={store}>
           <NavigationContainer>
             <SafeAreaView style={styles.container}>
-              <PlacesStackNavigator />
+              <TabsNavigator />
             </SafeAreaView>
             <ExpoStatusBar style="auto" />
           </NavigationContainer>

@@ -1,13 +1,10 @@
 import React from "react";
-import { Button, IconButton } from "react-native-paper";
-import styled from "styled-components";
-import { Dimensions, StyleSheet, StatusBar } from "react-native";
+import { IconButton } from "react-native-paper";
+import { StyleSheet, StatusBar } from "react-native";
 import { theme } from "../../infrastructure/theme";
 
 const ButtonSizeH = 40;
 const ButtonSizeW = 40;
-const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
-const deviceHeight = Dimensions.get("window").height / 280;
 
 export const EditButton = (props) => {
   return (

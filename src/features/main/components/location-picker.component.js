@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Button,
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-} from "react-native";
+import { Button, Alert } from "react-native";
 import { Text } from "../../../components/typography/text.component";
 import { theme } from "../../../infrastructure/theme";
 import * as Location from "expo-location";
 import { MapPreview } from "./map-preview.component";
+import {
+  ButtonContainer,
+  FormContainer,
+} from "../styles/location-picker.styles";
+import { PreviewLoadingState } from "./loading-preview.component";
 
 export const LocationPicker = ({ navigation, route, onLocationPicked }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [pickedLocation, setPickedLocation] = useState();
-  const [prevRegion, setPrevRegion] = useState();
 
   const mapLocation = route.params;
 
   useEffect(() => {
     if (mapLocation) {
       setPickedLocation(mapLocation.mapPickedLocation);
-      setPrevRegion(mapLocation.pickedRegion);
       onLocationPicked(mapLocation.mapPickedLocation);
     }
   }, [mapLocation, onLocationPicked]);
@@ -86,53 +83,36 @@ export const LocationPicker = ({ navigation, route, onLocationPicked }) => {
   const pickOnMapHandler = () => {
     navigation.navigate("Map", {
       prevLocation: pickedLocation,
+      readonly: false,
+      initmap: false,
     });
   };
 
   return (
-    <View style={styles.container}>
+    <FormContainer>
       <MapPreview
-        style={styles.imagePreview}
         location={pickedLocation}
         onPress={pickOnMapHandler}
         isFetching={isFetching}
       >
         {isFetching ? (
-          <ActivityIndicator size="large" color={theme.colors.brand.primary} />
+          <PreviewLoadingState label="Loading..." />
         ) : (
           <Text>No location chosen!</Text>
         )}
       </MapPreview>
-      <View style={styles.buttonContainer}>
+      <ButtonContainer>
         <Button
           title="Get My Location"
           color={theme.colors.brand.primary}
           onPress={getLocationHandler}
         />
         <Button
-          title="Pick on Map"
+          title="Pick on the Map"
           color={theme.colors.brand.primary}
           onPress={pickOnMapHandler}
         />
-      </View>
-    </View>
+      </ButtonContainer>
+    </FormContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 15,
-  },
-  imagePreview: {
-    marginBottom: 10,
-    width: "100%",
-    height: 150,
-    borderColor: "#ccc",
-    borderWidth: 1,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-  },
-});

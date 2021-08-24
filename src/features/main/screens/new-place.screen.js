@@ -1,15 +1,26 @@
-import React, { useCallback, useState } from "react";
-import { View, Button, TextInput, ScrollView, StyleSheet } from "react-native";
-import { Text } from "../../../components/typography/text.component";
+import React, { useCallback, useEffect, useState } from "react";
+import { ScrollView, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 import { ImgPicker } from "../components/image-picker.component";
 import { theme } from "../../../infrastructure/theme";
 import { LocationPicker } from "../components/location-picker.component";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
+import { LoadingState } from "../components/loading-state.component";
+import {
+  FormContainer,
+  Title,
+  Header,
+  TitleInput,
+} from "../styles/new-place.styles";
+import { BodyButton } from "../../../components/buttons/body.buttons";
 
 export const NewPlaceScreen = ({ navigation, route }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   const { item, edit } = route.params ? route.params : {};
+  const itemId = route.params && edit ? item.id : null;
+
   const [titleValue, setTitleValue] = useState(
     route.params && edit ? item.title : ""
   );
@@ -19,6 +30,12 @@ export const NewPlaceScreen = ({ navigation, route }) => {
   const [selectedLocation, setSelectedLocation] = useState();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error);
+    }
+  }, [error]);
 
   const titleChangeHandler = (text) => {
     setTitleValue(text);
@@ -32,14 +49,39 @@ export const NewPlaceScreen = ({ navigation, route }) => {
     setSelectedLocation(location);
   }, []);
 
-  const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue, placeImage, selectedLocation));
-    navigation.goBack();
-  };
-
-  const updatePlaceHandler = () => {
-    navigation.goBack();
-  };
+  const editPlaceHandler = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      if (route.params && edit) {
+        await dispatch(
+          placesActions.updatePlace(
+            itemId,
+            titleValue,
+            placeImage,
+            selectedLocation
+          )
+        );
+      } else {
+        await dispatch(
+          placesActions.addPlace(titleValue, placeImage, selectedLocation)
+        );
+      }
+      navigation.navigate("Places");
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [
+    dispatch,
+    edit,
+    itemId,
+    navigation,
+    placeImage,
+    route.params,
+    selectedLocation,
+    titleValue,
+  ]);
 
   return (
     <>
@@ -48,17 +90,15 @@ export const NewPlaceScreen = ({ navigation, route }) => {
         icon="keyboard-backspace"
         onPress={() => navigation.goBack()}
       />
+      {isLoading && <LoadingState label="Saving..." />}
       <ScrollView>
-        <View style={styles.form}>
-          <Text variant="header" style={styles.header}>
-            {route.params ? "Edit Place" : "New Place"}
-          </Text>
-          <Text variant="body" style={styles.title}>
-            Title
-          </Text>
-          <TextInput
+        <FormContainer>
+          <Header variant="header">
+            {route.params && edit ? "Edit Place" : "New Place"}
+          </Header>
+          <Title variant="body">Title</Title>
+          <TitleInput
             placeholder="Place Title"
-            style={styles.input}
             value={titleValue}
             onChangeText={titleChangeHandler}
           />
@@ -68,40 +108,19 @@ export const NewPlaceScreen = ({ navigation, route }) => {
             route={route}
             onLocationPicked={locationPickedHandler}
           />
-          <Button
-            style={styles.button}
+          <BodyButton
             title="Save"
-            onPress={
-              route.params && edit ? updatePlaceHandler : savePlaceHandler
+            color={theme.colors.brand.primary}
+            mode="outlined"
+            onNavi={editPlaceHandler}
+            disabled={
+              !placeImage || titleValue.length <= 2 || !selectedLocation
+                ? true
+                : false
             }
-            disabled={titleValue.length <= 2 ? true : false}
           />
-        </View>
+        </FormContainer>
       </ScrollView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  form: {
-    margin: 30,
-  },
-  header: { alignSelf: "center" },
-  title: { marginTop: 5, paddingBottom: 8 },
-  input: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    marginBottom: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 2,
-  },
-  button: {
-    borderWidth: 2,
-    backgroundColor: theme.colors.brand.primary,
-    height: 50,
-    width: 140,
-    justifyContent: "center",
-    borderColor: theme.colors.bg.primary,
-    borderRadius: 10,
-  },
-});
