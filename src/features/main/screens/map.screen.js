@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Alert } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { theme } from "../../../infrastructure/theme";
 import { Button } from "react-native-paper";
@@ -7,9 +7,10 @@ import { BackButton } from "../../../components/buttons/goBack-button.component"
 import { useSelector, useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 import { MapCallout } from "../components/map-callout.component";
+import { LoadingState } from "../components/loading-state.component";
 
 const ButtonSizeH = 50;
-const ButtonSizeW = 140;
+const ButtonSizeW = 120;
 const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
 const deviceHeight = Dimensions.get("window").height / 1.2;
 
@@ -37,6 +38,13 @@ export const MapScreen = ({ navigation, route }) => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error);
+    }
+  }, [error]);
+
   useEffect(() => {
     if (prevData) {
       setChosenLocation(prevData.prevLocation);
@@ -87,6 +95,7 @@ export const MapScreen = ({ navigation, route }) => {
 
   return (
     <>
+      {isLoading && <LoadingState label="Loading..." />}
       {!initMap && (
         <BackButton
           title=""

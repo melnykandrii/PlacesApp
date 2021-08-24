@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 
 const ButtonSizeH = 50;
-const ButtonSizeW = 140;
+const ButtonSizeW = 120;
 const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
 const deviceHeight = Dimensions.get("window").height / 1.2;
 
