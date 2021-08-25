@@ -1,24 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  ActivityIndicator,
-  Dimensions,
-  StyleSheet,
-  FlatList,
-  Alert,
-} from "react-native";
-import { Button } from "react-native-paper";
-import { Text } from "../../../components/typography/text.component";
+import { FlatList, RefreshControl } from "react-native";
 import { SearchBar } from "../components/search-bar.component";
 import { PlaceItem } from "../components/place-item.component";
 import { theme } from "../../../infrastructure/theme";
 import { useSelector, useDispatch } from "react-redux";
+import { MainButton } from "../components/centered-button.component";
 import * as placesActions from "../../../services/store/actions/places-actions";
-
-const ButtonSizeH = 50;
-const ButtonSizeW = 120;
-const deviceWidth = Dimensions.get("window").width / 2 - ButtonSizeW / 2;
-const deviceHeight = Dimensions.get("window").height / 1.2;
+import { EmptyScreen } from "../components/empty-screen.component";
+import { LoadingState } from "../components/loading-state.component";
+import { ListContainer, SearchContainer } from "../styles/place-screen.styles";
+import { ErrorScreen } from "../components/error-screen";
 
 export const PlacesScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,11 +26,11 @@ export const PlacesScreen = ({ navigation }) => {
       setError(err.message);
     }
     setIsLoading(false);
-  }, [dispatch, setError, setIsLoading]);
+  }, [dispatch, setError]);
 
   useEffect(() => {
     loadPlacesHandler();
-  }, [dispatch, loadPlacesHandler]);
+  }, [dispatch, loadPlacesHandler, setIsLoading]);
 
   useEffect(() => {
     const willFocus = navigation.addListener("focus", loadPlacesHandler);
@@ -61,44 +52,34 @@ export const PlacesScreen = ({ navigation }) => {
 
   return (
     <>
-      <View style={styles.searchContainer}>
+      <SearchContainer>
         <SearchBar onFilter={onFilterChange} filter={searchfield} />
-      </View>
-
-      <View style={styles.listContainer}>
-        {isLoading && (
-          <View style={styles.centered}>
-            <ActivityIndicator
-              size="large"
-              color={theme.colors.brand.primary}
-            />
-            <Text variant="load">Loading...</Text>
-          </View>
-        )}
+      </SearchContainer>
+      <ListContainer>
+        {isLoading && <LoadingState label="Loading..." />}
         {!isLoading && !error && filteredPlaces.length === 0 && (
-          <View style={styles.centered}>
-            <Text>No results. Please try again.</Text>
-          </View>
+          <EmptyScreen label="No results. Please try again." />
         )}
         {!isLoading && error && (
-          <View style={styles.centered}>
-            <Text>An error occurred. Please try again.</Text>
-            <Button
-              mode="text"
-              onPress={loadPlacesHandler}
-              theme={{
-                colors: {
-                  primary: theme.colors.brand.primary,
-                },
-              }}
-            >
-              Try again
-            </Button>
-          </View>
+          <ErrorScreen
+            label="An error occurred. Please try again."
+            title="Try again"
+            mode="outlined"
+            onNavi={loadPlacesHandler}
+            color={theme.colors.brand.primary}
+          />
         )}
         {!isLoading && filteredPlaces && (
           <FlatList
             data={filteredPlaces}
+            refreshControl={
+              <RefreshControl
+                tintColor={theme.colors.brand.primary}
+                colors={[theme.colors.brand.primary]}
+                refreshing={isLoading}
+                onRefresh={loadPlacesHandler}
+              />
+            }
             renderItem={({ item }) => (
               <PlaceItem
                 image={item.imageUri}
@@ -110,49 +91,14 @@ export const PlacesScreen = ({ navigation }) => {
             keyExtractor={(item) => item.id.toString()}
           />
         )}
-      </View>
-
-      <Button
-        icon="plus"
-        mode="text"
-        onPress={() => navigation.navigate("NewPlace")}
-        style={styles.fav}
-        theme={{
-          colors: {
-            primary: theme.colors.bg.primary,
-          },
-        }}
-      >
-        Add New
-      </Button>
+      </ListContainer>
+      {!error && (
+        <MainButton
+          title="Add New"
+          mode="outlined"
+          onNavi={() => navigation.navigate("NewPlace")}
+        />
+      )}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  fav: {
-    position: "absolute",
-    top: deviceHeight,
-    right: deviceWidth,
-    zIndex: 9,
-    borderWidth: 2,
-    backgroundColor: theme.colors.brand.primary,
-    height: ButtonSizeH,
-    width: ButtonSizeW,
-    justifyContent: "center",
-    borderColor: theme.colors.bg.primary,
-    borderRadius: 10,
-  },
-  searchContainer: {
-    flex: 1,
-  },
-  listContainer: {
-    padding: 5,
-    flex: 9,
-  },
-  centered: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { theme } from "../../../infrastructure/theme";
 
 const deviceWidth = Dimensions.get("window").width / 2 - 20;
-const deviceHeight = Dimensions.get("window").height / 2 - 20;
+const deviceHeight = Dimensions.get("window").height / 3;
 
 const IndicatorContainer = styled.View`
   position: absolute;

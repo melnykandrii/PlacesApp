@@ -11,7 +11,7 @@ export const UPDATE_PLACE = "UPDATE_PLACE";
 export const deletePlace = (placeId) => {
   return async (dispatch) => {
     const response = await fetch(
-      `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${placeId}.jon`,
+      `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${placeId}.json`,
       {
         method: "DELETE",
       }

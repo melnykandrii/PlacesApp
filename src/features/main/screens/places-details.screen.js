@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Button,
-  Alert,
-  ActivityIndicator,
-  Dimensions,
-} from "react-native";
+import { ScrollView, Alert } from "react-native";
 import { MapPreview } from "../components/map-preview.component";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
-import { Text } from "../../../components/typography/text.component";
 import { theme } from "../../../infrastructure/theme";
 import { useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 import { EditButton } from "../../../components/buttons/edit.button.component";
+import { LoadingState } from "../components/loading-state.component";
+import {
+  Address,
+  Header,
+  FormContainer,
+  ImageContainer,
+  ImagePreview,
+} from "../styles/place-details.styles";
+import { BodyButton } from "../../../components/buttons/body.buttons";
+import { Spacer } from "../../../components/spacer/spacer.component";
 
 export const DetailsScreen = ({ route, navigation }) => {
   const [error, setError] = useState(false);
@@ -72,6 +72,7 @@ export const DetailsScreen = ({ route, navigation }) => {
 
   return (
     <>
+      {isLoading && <LoadingState label="Deleting..." />}
       <BackButton
         title=""
         icon="keyboard-backspace"
@@ -83,66 +84,24 @@ export const DetailsScreen = ({ route, navigation }) => {
         icon="file-document-edit-outline"
       />
       <ScrollView>
-        <View style={styles.form}>
-          <Text variant="header" style={styles.header}>
-            {placesTitle}
-          </Text>
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: item.imageUri }} style={styles.image} />
-          </View>
+        <FormContainer>
+          <Header variant="header">{placesTitle}</Header>
+          <ImageContainer>
+            <ImagePreview source={{ uri: item.imageUri }} />
+          </ImageContainer>
 
-          <Text variant="body" style={styles.address}>
-            {item.address}
-          </Text>
-          <MapPreview
-            location={placesLocation}
-            style={styles.imagePreview}
-            onPress={showMapHandler}
-          />
-          <Button
-            style={styles.button}
-            title="Delete"
-            onPress={deletePlaceHandler.bind(this, item.id)}
-          />
-        </View>
+          <Address variant="body">{item.address}</Address>
+          <MapPreview location={placesLocation} onPress={showMapHandler} />
+          <Spacer position="top" size="xxxl">
+            <BodyButton
+              title="Delete"
+              color={theme.colors.brand.primary}
+              mode="outlined"
+              onNavi={deletePlaceHandler.bind(this, item.id)}
+            />
+          </Spacer>
+        </FormContainer>
       </ScrollView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  form: {
-    margin: 30,
-  },
-  header: { alignSelf: "center", paddingBottom: 30 },
-  address: { marginTop: 5, paddingBottom: 20 },
-  imageContainer: {
-    width: "100%",
-    height: 200,
-    marginBottom: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#ccc",
-    borderWidth: 1,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  imagePreview: {
-    marginBottom: 10,
-    width: "100%",
-    height: 150,
-    borderColor: "#ccc",
-    borderWidth: 1,
-  },
-  button: {
-    borderWidth: 2,
-    backgroundColor: theme.colors.brand.primary,
-    height: 50,
-    width: 140,
-    justifyContent: "center",
-    borderColor: theme.colors.bg.primary,
-    borderRadius: 10,
-  },
-});

@@ -12,6 +12,14 @@ export const Title = styled(Text)`
 
 export const Header = styled(Text)`
   align-self: center;
+  padding-bottom: ${(props) => props.theme.space[3]};
+  padding-top: ${(props) => props.theme.space[6]};
+`;
+
+export const HeaderDetails = styled(Text)`
+  align-self: center;
+  padding-bottom: ${(props) => props.theme.space[7]};
+  padding-top: ${(props) => props.theme.space[6]};
 `;
 
 export const TitleInput = styled.TextInput`
