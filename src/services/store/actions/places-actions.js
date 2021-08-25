@@ -1,5 +1,5 @@
 import * as FileSystem from "expo-file-system";
-//import { insertPlace, fetchPlaces } from "../../helper/db";
+import { insertPlace, fetchPlaces, removePlace } from "../../helper/db";
 import Place from "../../models/place";
 import { locationRequest } from "../../location/location.service";
 
@@ -7,7 +7,7 @@ export const ADD_PLACE = "ADD_PLACE";
 export const SET_PLACES = "SET_PLACES";
 export const DELETE_PLACE = "DELETE_PLACE";
 export const UPDATE_PLACE = "UPDATE_PLACE";
-
+/*
 export const deletePlace = (placeId) => {
   return async (dispatch) => {
     const response = await fetch(
@@ -23,7 +23,7 @@ export const deletePlace = (placeId) => {
     dispatch({ type: DELETE_PLACE, pid: placeId });
   };
 };
-
+*/
 export const updatePlace = (id, title, image, location) => {
   return async (dispatch) => {
     const address = await locationRequest(location);
@@ -73,7 +73,7 @@ export const updatePlace = (id, title, image, location) => {
     }
   };
 };
-
+/*
 //Retriving data from Firebase DB;
 export const addPlace = (title, image, location) => {
   return async (dispatch) => {
@@ -150,9 +150,21 @@ export const loadPlaces = () => {
     }
   };
 };
+*/
+//Deleting Data from the local DB
+export const deletePlace = (placeId) => {
+  return async (dispatch) => {
+    try {
+      await removePlace(placeId);
+      dispatch({ type: DELETE_PLACE, pid: placeId });
+    } catch (err) {
+      throw err;
+    }
+  };
+};
 
 //Retriving data from local DB
-/*
+
 export const loadPlaces = () => {
   return async (dispatch) => {
     try {
@@ -200,4 +212,3 @@ export const addPlace = (title, image, location) => {
     }
   };
 };
-*/
