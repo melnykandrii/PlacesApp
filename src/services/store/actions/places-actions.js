@@ -1,5 +1,10 @@
 import * as FileSystem from "expo-file-system";
-import { insertPlace, fetchPlaces, removePlace } from "../../helper/db";
+import {
+  insertPlace,
+  fetchPlaces,
+  removePlace,
+  rewritePlace,
+} from "../../helper/db";
 import Place from "../../models/place";
 import { locationRequest } from "../../location/location.service";
 
@@ -7,6 +12,7 @@ export const ADD_PLACE = "ADD_PLACE";
 export const SET_PLACES = "SET_PLACES";
 export const DELETE_PLACE = "DELETE_PLACE";
 export const UPDATE_PLACE = "UPDATE_PLACE";
+//deleting data from the FireBase DB
 /*
 export const deletePlace = (placeId) => {
   return async (dispatch) => {
@@ -23,7 +29,7 @@ export const deletePlace = (placeId) => {
     dispatch({ type: DELETE_PLACE, pid: placeId });
   };
 };
-*/
+//Updating data in the FireBase DB
 export const updatePlace = (id, title, image, location) => {
   return async (dispatch) => {
     const address = await locationRequest(location);
@@ -73,8 +79,8 @@ export const updatePlace = (id, title, image, location) => {
     }
   };
 };
-/*
-//Retriving data from Firebase DB;
+
+//posting data to Firebase DB;
 export const addPlace = (title, image, location) => {
   return async (dispatch) => {
     const address = await locationRequest(location);
@@ -151,6 +157,46 @@ export const loadPlaces = () => {
   };
 };
 */
+//Updating Data in the Local SQL DB
+export const updatePlace = (id, title, image, location) => {
+  return async (dispatch) => {
+    const address = await locationRequest(location);
+    const fileName = image.split("/").pop();
+    const newPath = FileSystem.documentDirectory + fileName;
+    try {
+      if (image === newPath) {
+        newPath === image;
+      } else {
+        await FileSystem.moveAsync({
+          from: image,
+          to: newPath,
+        });
+      }
+      await rewritePlace(
+        id,
+        title,
+        newPath,
+        address,
+        location.lat,
+        location.lng
+      );
+
+      dispatch({
+        type: UPDATE_PLACE,
+        pid: id,
+        placeData: {
+          title: title,
+          image: newPath,
+          address: address,
+          coords: { lat: location.lat, lng: location.lng },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+};
 //Deleting Data from the local DB
 export const deletePlace = (placeId) => {
   return async (dispatch) => {
@@ -164,7 +210,6 @@ export const deletePlace = (placeId) => {
 };
 
 //Retriving data from local DB
-
 export const loadPlaces = () => {
   return async (dispatch) => {
     try {

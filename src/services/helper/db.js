@@ -73,3 +73,21 @@ export const removePlace = (id) => {
   });
   return promise;
 };
+
+export const rewritePlace = (id, title, imageUri, address, lat, lng) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "UPDATE places SET title =? , imageUri =? , address =? , lat =? , lng =? WHERE id =? ",
+        [title, imageUri, address, lat, lng, id],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject();
+        }
+      );
+    });
+  });
+  return promise;
+};
