@@ -1,10 +1,10 @@
 import * as FileSystem from "expo-file-system";
-import {
+/*import {
   insertPlace,
   fetchPlaces,
   removePlace,
   rewritePlace,
-} from "../../helper/db";
+} from "../../helper/db";*/
 import Place from "../../models/place";
 import { locationRequest } from "../../location/location.service";
 
@@ -12,8 +12,9 @@ export const ADD_PLACE = "ADD_PLACE";
 export const SET_PLACES = "SET_PLACES";
 export const DELETE_PLACE = "DELETE_PLACE";
 export const UPDATE_PLACE = "UPDATE_PLACE";
+
 //deleting data from the FireBase DB
-/*
+
 export const deletePlace = (placeId) => {
   return async (dispatch) => {
     const response = await fetch(
@@ -29,6 +30,7 @@ export const deletePlace = (placeId) => {
     dispatch({ type: DELETE_PLACE, pid: placeId });
   };
 };
+
 //Updating data in the FireBase DB
 export const updatePlace = (id, title, image, location) => {
   return async (dispatch) => {
@@ -156,9 +158,9 @@ export const loadPlaces = () => {
     }
   };
 };
-*/
+
 //Updating Data in the Local SQL DB
-export const updatePlace = (id, title, image, location) => {
+/*export const updatePlace = (id, title, image, location) => {
   return async (dispatch) => {
     const address = await locationRequest(location);
     const fileName = image.split("/").pop();
@@ -257,3 +259,4 @@ export const addPlace = (title, image, location) => {
     }
   };
 };
+*/

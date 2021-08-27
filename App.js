@@ -2,7 +2,6 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
-import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import {
   useFonts as useOswald,
@@ -20,6 +19,7 @@ import ReduxThunk from "redux-thunk";
 import placesReducer from "./src/services/store/reducers/places-reducers";
 import { init } from "./src/services/helper/db";
 import { TabsNavigator } from "./src/infrastructure/navigation/tabs.navigator";
+import { AuthStackNavigator } from "./src/infrastructure/navigation/auth-stack.navigator";
 
 init()
   .then(() => {})
@@ -55,9 +55,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <NavigationContainer>
-            <SafeAreaView style={styles.container}>
-              <TabsNavigator />
-            </SafeAreaView>
+            <AuthStackNavigator />
             <ExpoStatusBar style="auto" />
           </NavigationContainer>
         </Provider>
@@ -65,10 +63,3 @@ export default function App() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight,
-  },
-});

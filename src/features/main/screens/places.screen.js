@@ -57,8 +57,22 @@ export const PlacesScreen = ({ navigation }) => {
       </SearchContainer>
       <ListContainer>
         {isLoading && <LoadingState label="Loading..." />}
-        {!isLoading && !error && filteredPlaces.length === 0 && (
-          <EmptyScreen label="No results. Please try again." />
+        {!isLoading &&
+          !error &&
+          places.length > 0 &&
+          filteredPlaces.length === 0 && (
+            <EmptyScreen
+              icon="map-search-outline"
+              label="We could not find any place."
+              description="Please adjust search criteria and try again."
+            />
+          )}
+        {!isLoading && !error && places.length === 0 && (
+          <EmptyScreen
+            icon="information-outline"
+            label="You don't have any saved place."
+            description="Plese add one in order to see it here."
+          />
         )}
         {!isLoading && error && (
           <ErrorScreen
