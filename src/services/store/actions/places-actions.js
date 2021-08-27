@@ -16,9 +16,10 @@ export const UPDATE_PLACE = "UPDATE_PLACE";
 //deleting data from the FireBase DB
 
 export const deletePlace = (placeId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${placeId}.json`,
+      `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${placeId}.json?auth=${token}`,
       {
         method: "DELETE",
       }
@@ -33,7 +34,8 @@ export const deletePlace = (placeId) => {
 
 //Updating data in the FireBase DB
 export const updatePlace = (id, title, image, location) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const address = await locationRequest(location);
     const fileName = image.split("/").pop();
     const newPath = FileSystem.documentDirectory + fileName;
@@ -48,7 +50,7 @@ export const updatePlace = (id, title, image, location) => {
         });
       }
       const response = await fetch(
-        `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${id}.json`,
+        `https://myplace121212-default-rtdb.firebaseio.com/myplaces/${id}.json?auth=${token}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -84,7 +86,8 @@ export const updatePlace = (id, title, image, location) => {
 
 //posting data to Firebase DB;
 export const addPlace = (title, image, location) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const address = await locationRequest(location);
     const fileName = image.split("/").pop();
     const newPath = FileSystem.documentDirectory + fileName;
@@ -94,7 +97,7 @@ export const addPlace = (title, image, location) => {
         to: newPath,
       });
       const responFire = await fetch(
-        "https://myplace121212-default-rtdb.firebaseio.com/myplaces.json",
+        "https://myplace121212-default-rtdb.firebaseio.com/myplaces.json?auth=${token}",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

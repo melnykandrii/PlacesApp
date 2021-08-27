@@ -1,36 +1,109 @@
-import React from "react";
+import React, { useState, useEffect, useReducer, useCallback } from "react";
 import {
   ScrollView,
-  View,
   KeyboardAvoidingView,
   StyleSheet,
   Platform,
+  Alert,
 } from "react-native";
+import { useDispatch } from "react-redux";
+
+import * as authActions from "../../../services/store/actions/auth-actions";
+
 import { BodyButton } from "../../../components/buttons/body.buttons";
 import { Card } from "../../../components/card/card.component";
 import { Input } from "../../../components/typography/input.component";
 import { theme } from "../../../infrastructure/theme";
-import styled from "styled-components";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { Spacer } from "../../../components/spacer/spacer.component";
+import { AccountBackground, AccountCover } from "../styles/auth-screen.styles";
 
-const AccountBackground = styled.ImageBackground.attrs({
-  source: require("../../../../assets/home_bg_places.jpg"),
-})`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
-const AccountCover = styled.View`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
-`;
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
+    };
+  }
+  return state;
+};
 
-export const AuthScreen = () => {
+export const AuthScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const dispatch = useDispatch();
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      email: "",
+      password: "",
+    },
+    inputValidities: {
+      email: false,
+      password: false,
+    },
+    formIsValid: false,
+  });
+
+  useEffect(() => {
+    if (error) {
+      return Alert.alert("An error occured!", error);
+    }
+  }, [error]);
+
+  const authHandler = async () => {
+    let action;
+    if (isSignUp) {
+      action = authActions.signUp(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    } else {
+      action = authActions.logIn(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    }
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      navigation.navigate("Places");
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  };
+
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchFormState]
+  );
+
   return (
     <AccountBackground>
       <AccountCover>
@@ -52,8 +125,8 @@ export const AuthScreen = () => {
                   required
                   email
                   autoCapitalize="none"
-                  errorMessage="Please enter a valid email address"
-                  onInputChange={() => {}}
+                  errorText="Please enter a valid email address"
+                  onInputChange={inputChangeHandler}
                   initialValue=""
                 />
                 <Input
@@ -64,23 +137,25 @@ export const AuthScreen = () => {
                   required
                   minLength={6}
                   autoCapitalize="none"
-                  errorMessage="Please enter a valid password"
-                  onInputChange={() => {}}
+                  errorText="Please enter a valid password"
+                  onInputChange={inputChangeHandler}
                   initialValue=""
                 />
                 <Spacer position="top" size="xxxl" />
                 <BodyButton
-                  title="Login"
+                  title={isSignUp ? "SignUp" : "Login"}
                   color={theme.colors.brand.muted}
                   mode="outlined"
-                  onNavi={() => {}}
+                  onNavi={authHandler}
+                  loading={isLoading}
+                  icon="lock"
                 />
                 <Spacer position="top" size="large" />
                 <BodyButton
-                  title="SignUp"
+                  title={`To ${isSignUp ? "Login" : "SignUp"}`}
                   color={theme.colors.brand.muted}
                   mode="outlined"
-                  onNavi={() => {}}
+                  onNavi={() => setIsSignUp((prevState) => !prevState)}
                 />
               </ScrollView>
             </LinearGradient>

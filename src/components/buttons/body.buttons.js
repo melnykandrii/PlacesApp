@@ -14,6 +14,7 @@ export const BodyButton = (props) => {
       onPress={props.onNavi}
       color={props.color || theme.colors.brand.aqua}
       mode={props.mode}
+      loading={props.loading}
     >
       {props.title}
     </StyledBButton>

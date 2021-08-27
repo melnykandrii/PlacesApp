@@ -16,10 +16,10 @@ import { theme } from "./src/infrastructure/theme";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
+import authReducer from "./src/services/store/reducers/auth-reducers";
 import placesReducer from "./src/services/store/reducers/places-reducers";
 import { init } from "./src/services/helper/db";
-import { TabsNavigator } from "./src/infrastructure/navigation/tabs.navigator";
-import { AuthStackNavigator } from "./src/infrastructure/navigation/auth-stack.navigator";
+import { AppNavigator } from "./src/infrastructure/navigation";
 
 init()
   .then(() => {})
@@ -30,6 +30,7 @@ init()
 
 const rootReducer = combineReducers({
   places: placesReducer,
+  auth: authReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -54,12 +55,10 @@ export default function App() {
     <>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <NavigationContainer>
-            <AuthStackNavigator />
-            <ExpoStatusBar style="auto" />
-          </NavigationContainer>
+          <AppNavigator />
         </Provider>
       </ThemeProvider>
+      <ExpoStatusBar style="auto" />
     </>
   );
 }
