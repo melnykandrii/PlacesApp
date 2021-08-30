@@ -85,7 +85,7 @@ export const AuthScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      navigation.navigate("Places");
+      //navigation.navigate("Places");
     } catch (err) {
       setError(err.message);
     }
@@ -144,7 +144,7 @@ export const AuthScreen = ({ navigation }) => {
                 <Spacer position="top" size="xxxl" />
                 <BodyButton
                   title={isSignUp ? "SignUp" : "Login"}
-                  color={theme.colors.brand.muted}
+                  buttonColor={theme.colors.brand.muted}
                   mode="outlined"
                   onNavi={authHandler}
                   loading={isLoading}
@@ -153,7 +153,7 @@ export const AuthScreen = ({ navigation }) => {
                 <Spacer position="top" size="large" />
                 <BodyButton
                   title={`To ${isSignUp ? "Login" : "SignUp"}`}
-                  color={theme.colors.brand.muted}
+                  buttonColor={theme.colors.brand.muted}
                   mode="outlined"
                   onNavi={() => setIsSignUp((prevState) => !prevState)}
                 />

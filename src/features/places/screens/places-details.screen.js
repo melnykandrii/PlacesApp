@@ -6,7 +6,7 @@ import { theme } from "../../../infrastructure/theme";
 import { useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 import { EditButton } from "../../../components/buttons/edit.button.component";
-import { LoadingState } from "../components/loading-state.component";
+import { LoadingState } from "../../../components/states/loading-state.component";
 import {
   Address,
   Header,
@@ -32,7 +32,7 @@ export const DetailsScreen = ({ route, navigation }) => {
   }, [error]);
 
   const showMapHandler = () => {
-    navigation.navigate("Map", {
+    navigation.navigate("MapSelector", {
       readonly: true,
       initmap: false,
       prevLocation: placesLocation,
@@ -95,7 +95,7 @@ export const DetailsScreen = ({ route, navigation }) => {
           <Spacer position="top" size="xxxl">
             <BodyButton
               title="Delete"
-              color={theme.colors.brand.primary}
+              buttonColor={theme.colors.brand.primary}
               mode="outlined"
               onNavi={deletePlaceHandler.bind(this, item.id)}
             />

@@ -81,7 +81,7 @@ export const LocationPicker = ({ navigation, route, onLocationPicked }) => {
   };
 
   const pickOnMapHandler = () => {
-    navigation.navigate("Map", {
+    navigation.navigate("MapSelector", {
       prevLocation: pickedLocation,
       readonly: false,
       initmap: false,

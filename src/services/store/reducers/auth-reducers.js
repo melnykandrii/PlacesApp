@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
     case SET_TRYAUTH:
       return { ...state, tryauth: true };
     case LOGOUT:
-      return initialState;
+      return { ...initialState, tryauth: true };
     /*case LOGIN:
       return {
         token: action.token,

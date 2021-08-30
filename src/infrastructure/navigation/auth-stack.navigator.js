@@ -3,10 +3,7 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import { AuthScreen } from "../../features/main/screens/authentication.screen";
-import { PlacesStackNavigator } from "../../infrastructure/navigation/places-stack.navigation";
-import { MapScreen } from "../../features/main/screens/map.screen";
-import { StartupScreen } from "../../features/main/screens/startup.screen";
+import { AuthScreen } from "../../features/auth/screens/authentication.screen";
 
 const AuthStack = createStackNavigator();
 

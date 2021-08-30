@@ -97,7 +97,7 @@ export const addPlace = (title, image, location) => {
         to: newPath,
       });
       const responFire = await fetch(
-        "https://myplace121212-default-rtdb.firebaseio.com/myplaces.json?auth=${token}",
+        `https://myplace121212-default-rtdb.firebaseio.com/myplaces.json?auth=${token}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -134,7 +134,6 @@ export const loadPlaces = () => {
       const response = await fetch(
         "https://myplace121212-default-rtdb.firebaseio.com/myplaces.json"
       );
-
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }

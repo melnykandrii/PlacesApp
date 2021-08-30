@@ -4,10 +4,10 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import { PlacesScreen } from "../../features/main/screens/places.screen";
-import { DetailsScreen } from "../../features/main/screens/places-details.screen";
-import { NewPlaceScreen } from "../../features/main/screens/new-place.screen";
-import { MapScreen } from "../../features/main/screens/map.screen";
+import { PlacesScreen } from "../../features/places/screens/places.screen";
+import { DetailsScreen } from "../../features/places/screens/places-details.screen";
+import { NewPlaceScreen } from "../../features/places/screens/new-place.screen";
+import { MapScreen } from "../../features/map/screens/map.screen";
 
 const PlacesStack = createStackNavigator();
 
@@ -24,6 +24,7 @@ export const PlacesStackNavigator = () => {
         <PlacesStack.Screen name="Places" component={PlacesScreen} />
         <PlacesStack.Screen name="NewPlace" component={NewPlaceScreen} />
         <PlacesStack.Screen name="Details" component={DetailsScreen} />
+        <PlacesStack.Screen name="MapSelector" component={MapScreen} />
       </PlacesStack.Navigator>
     </SafeAreaView>
   );

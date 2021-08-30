@@ -6,7 +6,7 @@ import { ImgPicker } from "../components/image-picker.component";
 import { theme } from "../../../infrastructure/theme";
 import { LocationPicker } from "../components/location-picker.component";
 import { BackButton } from "../../../components/buttons/goBack-button.component";
-import { LoadingState } from "../components/loading-state.component";
+import { LoadingState } from "../../../components/states/loading-state.component";
 import {
   FormContainer,
   Title,
@@ -110,7 +110,7 @@ export const NewPlaceScreen = ({ navigation, route }) => {
           />
           <BodyButton
             title="Save"
-            color={theme.colors.brand.primary}
+            buttonColor={theme.colors.brand.primary}
             mode="outlined"
             onNavi={editPlaceHandler}
             disabled={

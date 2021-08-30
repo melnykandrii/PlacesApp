@@ -4,12 +4,11 @@ import { SearchBar } from "../components/search-bar.component";
 import { PlaceItem } from "../components/place-item.component";
 import { theme } from "../../../infrastructure/theme";
 import { useSelector, useDispatch } from "react-redux";
-import { MainButton } from "../components/centered-button.component";
+import { MainButton } from "../../../components/buttons/centered-button.component";
 import * as placesActions from "../../../services/store/actions/places-actions";
-import { EmptyScreen } from "../components/empty-screen.component";
-import { LoadingState } from "../components/loading-state.component";
+import { LoadingState } from "../../../components/states/loading-state.component";
 import { ListContainer, SearchContainer } from "../styles/place-screen.styles";
-import { ErrorScreen } from "../components/error-screen";
+import { EmptyStateScreen } from "../components/empty-state.screen";
 
 export const PlacesScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +32,10 @@ export const PlacesScreen = ({ navigation }) => {
   }, [dispatch, loadPlacesHandler, setIsLoading]);
 
   useEffect(() => {
-    const willFocus = navigation.addListener("focus", loadPlacesHandler);
-    return willFocus;
+    const focus = navigation.addListener("focus", loadPlacesHandler);
+    return () => {
+      focus();
+    };
   }, [loadPlacesHandler, navigation]);
 
   //const [displayPlace, setdisplayPlace] = useState(places);
@@ -56,34 +57,35 @@ export const PlacesScreen = ({ navigation }) => {
         <SearchBar onFilter={onFilterChange} filter={searchfield} />
       </SearchContainer>
       <ListContainer>
-        {isLoading && <LoadingState label="Loading..." />}
         {!isLoading &&
           !error &&
           places.length > 0 &&
           filteredPlaces.length === 0 && (
-            <EmptyScreen
+            <EmptyStateScreen
               icon="map-search-outline"
               label="We could not find any place."
               description="Please adjust search criteria and try again."
             />
           )}
         {!isLoading && !error && places.length === 0 && (
-          <EmptyScreen
+          <EmptyStateScreen
             icon="information-outline"
             label="You don't have any saved place."
             description="Plese add one in order to see it here."
           />
         )}
+        {isLoading && <LoadingState label="Loading..." />}
         {!isLoading && error && (
-          <ErrorScreen
+          <EmptyStateScreen
+            icon="close-circle"
             label="An error occurred. Please try again."
             title="Try again"
             mode="outlined"
             onNavi={loadPlacesHandler}
-            color={theme.colors.brand.primary}
+            buttonColor={theme.colors.brand.primary}
           />
         )}
-        {!isLoading && filteredPlaces && (
+        {!isLoading && filteredPlaces && !error && (
           <FlatList
             data={filteredPlaces}
             refreshControl={
@@ -102,7 +104,7 @@ export const PlacesScreen = ({ navigation }) => {
                 onSelect={() => navigation.navigate("Details", { item: item })}
               />
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
           />
         )}
       </ListContainer>

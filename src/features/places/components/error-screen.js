@@ -1,19 +1,13 @@
 import React from "react";
 import { Dimensions } from "react-native";
 import { Text } from "../../../components/typography/text.component";
+import { BodyButton } from "../../../components/buttons/body.buttons";
 import styled from "styled-components";
-import { Avatar } from "react-native-paper";
+import { EmptyIcon } from "../styles/empty-screen.styles";
 import { Spacer } from "../../../components/spacer/spacer.component";
 
-const deviceWidth = Dimensions.get("window").width / 4.5;
+const deviceWidth = Dimensions.get("window").width / 14;
 const deviceHeight = Dimensions.get("window").height / 3;
-
-const EmptyIcon = styled(Avatar.Icon).attrs({
-  size: 60,
-})`
-  background: ${(props) => props.bg || props.theme.colors.brand.primary};
-  align-self: center;
-`;
 
 const EmptyContainer = styled.View`
   position: absolute;
@@ -24,16 +18,16 @@ const EmptyContainer = styled.View`
 
 const EmptyLabel = styled(Text)`
   align-self: center;
+  padding-bottom: 16px;
 `;
 
-export const EmptyScreen = (props) => {
+export const ErrorScreen = (props) => {
   return (
     <EmptyContainer>
       <EmptyIcon {...props} icon={props.icon} />
-      <Spacer position="top" size="xxl">
-        <EmptyLabel variant="bodyTitle">{props.label}</EmptyLabel>
-        <EmptyLabel variant="hint">{props.description}</EmptyLabel>
-      </Spacer>
+      <Spacer position="top" size="xxl" />
+      <EmptyLabel variant="bodyTitle">{props.label}</EmptyLabel>
+      <BodyButton {...props} />
     </EmptyContainer>
   );
 };

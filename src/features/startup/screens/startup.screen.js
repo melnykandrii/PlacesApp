@@ -21,9 +21,7 @@ export const StartupScreen = (props) => {
   useEffect(() => {
     const tryLogin = async () => {
       const userData = await AsyncStorage.getItem("userData");
-      console.log(userData);
       if (!userData) {
-        //props.navigation.navigate("Auth");
         dispatch(authActions.setAuth());
         return;
       }
@@ -32,19 +30,17 @@ export const StartupScreen = (props) => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        //props.navigation.navigate("Auth");
         dispatch(authActions.setAuth());
         return;
       }
 
       const expirationTime = expirationDate.getTime() - new Date().getTime();
 
-      //props.navigation.navigate("Places");
       dispatch(authActions.authenticate(userId, token, expirationTime));
     };
 
     tryLogin();
-  }, [dispatch, props.navigation]);
+  }, [dispatch]);
 
   return (
     <AccountBackground>

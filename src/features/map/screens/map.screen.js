@@ -5,8 +5,8 @@ import { BackButton } from "../../../components/buttons/goBack-button.component"
 import { useSelector, useDispatch } from "react-redux";
 import * as placesActions from "../../../services/store/actions/places-actions";
 import { MapCallout } from "../components/map-callout.component";
-import { LoadingState } from "../components/loading-state.component";
-import { MainButton } from "../components/centered-button.component";
+import { LoadingState } from "../../../components/states/loading-state.component";
+import { MainButton } from "../../../components/buttons/centered-button.component";
 import { Map } from "../styles/map.styles";
 
 export const MapScreen = ({ navigation, route }) => {
@@ -35,12 +35,6 @@ export const MapScreen = ({ navigation, route }) => {
   });
 
   useEffect(() => {
-    if (error) {
-      Alert.alert("An error occured!", error);
-    }
-  }, [error]);
-
-  useEffect(() => {
     if (prevData) {
       setChosenLocation(prevData.prevLocation);
       setReadOnly(prevData.readonly);
@@ -61,7 +55,12 @@ export const MapScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     loadPlacesHandler();
-  }, [dispatch, loadPlacesHandler]);
+  }, [dispatch, loadPlacesHandler, setIsLoading]);
+
+  useEffect(() => {
+    const willFocus = navigation.addListener("focus", loadPlacesHandler);
+    return willFocus;
+  }, [loadPlacesHandler, navigation]);
 
   const onRegionChangeHandler = (region) => setMapRegion(region);
   const selectLocationHandler = (event) => {

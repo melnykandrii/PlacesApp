@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions } from "react-native";
 import { Button } from "react-native-paper";
 import styled from "styled-components";
-import { theme } from "../../../infrastructure/theme";
+import { theme } from "../../infrastructure/theme";
 
 const ButtonSizeH = 50;
 const ButtonSizeW = 120;

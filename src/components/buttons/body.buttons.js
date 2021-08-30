@@ -12,9 +12,10 @@ export const BodyButton = (props) => {
     <StyledBButton
       {...props}
       onPress={props.onNavi}
-      color={props.color || theme.colors.brand.aqua}
+      color={props.buttonColor || theme.colors.brand.spring}
       mode={props.mode}
       loading={props.loading}
+      icon={props.buttonIcon}
     >
       {props.title}
     </StyledBButton>

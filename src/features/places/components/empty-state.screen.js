@@ -1,28 +1,28 @@
 import React from "react";
-import { Dimensions } from "react-native";
 import { Text } from "../../../components/typography/text.component";
 import { BodyButton } from "../../../components/buttons/body.buttons";
 import styled from "styled-components";
-
-const deviceWidth = Dimensions.get("window").width / 14;
-const deviceHeight = Dimensions.get("window").height / 3;
+import { EmptyIcon } from "../styles/empty-screen.styles";
+import { Spacer } from "../../../components/spacer/spacer.component";
 
 const EmptyContainer = styled.View`
-  position: absolute;
-  top: ${deviceHeight}px;
-  right: ${deviceWidth}px;
-  z-index: 999;
+  flex: 9;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const EmptyLabel = styled(Text)`
   align-self: center;
-  padding-bottom: 16px;
 `;
 
-export const ErrorScreen = (props) => {
+export const EmptyStateScreen = (props) => {
   return (
     <EmptyContainer>
+      <EmptyIcon {...props} icon={props.icon} />
+      <Spacer position="top" size="xxl" />
       <EmptyLabel variant="bodyTitle">{props.label}</EmptyLabel>
+      <EmptyLabel variant="hint">{null || props.description}</EmptyLabel>
       <BodyButton {...props} />
     </EmptyContainer>
   );

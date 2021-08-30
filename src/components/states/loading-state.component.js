@@ -1,8 +1,8 @@
 import React from "react";
 import { Dimensions } from "react-native";
-import { Text } from "../../../components/typography/text.component";
+import { Text } from "../typography/text.component";
 import styled from "styled-components";
-import { theme } from "../../../infrastructure/theme";
+import { theme } from "../../infrastructure/theme";
 
 const deviceWidth = Dimensions.get("window").width / 2 - 20;
 const deviceHeight = Dimensions.get("window").height / 3;
