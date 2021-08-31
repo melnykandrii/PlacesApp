@@ -1,10 +1,4 @@
-import {
-  LOGIN,
-  SIGNUP,
-  AUTHENTICATE,
-  LOGOUT,
-  SET_TRYAUTH,
-} from "../actions/auth-actions";
+import { AUTHENTICATE, LOGOUT, SET_TRYAUTH } from "../actions/auth-actions";
 const initialState = {
   token: null,
   userId: null,

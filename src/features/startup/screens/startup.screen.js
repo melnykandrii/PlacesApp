@@ -1,21 +1,13 @@
 import React, { useEffect } from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
 
 import { theme } from "../../../infrastructure/theme";
 import * as authActions from "../../../services/store/actions/auth-actions";
+import { Background, Container } from "../styles/startup-screen.styles";
 
-export const AccountBackground = styled.ImageBackground.attrs({
-  source: require("../../../../assets/splash.png"),
-})`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const StartupScreen = (props) => {
+export const StartupScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,24 +30,14 @@ export const StartupScreen = (props) => {
 
       dispatch(authActions.authenticate(userId, token, expirationTime));
     };
-
     tryLogin();
   }, [dispatch]);
 
   return (
-    <AccountBackground>
-      <View style={styles.screen}>
+    <Background>
+      <Container>
         <ActivityIndicator size="large" color={theme.colors.brand.primary} />
-      </View>
-    </AccountBackground>
+      </Container>
+    </Background>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    paddingBottom: 70,
-  },
-});

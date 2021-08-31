@@ -129,17 +129,17 @@ export const addPlace = (title, image, location) => {
 
 //Retriving data from Firebase DB;
 export const loadPlaces = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     try {
       const response = await fetch(
-        "https://myplace121212-default-rtdb.firebaseio.com/myplaces.json"
+        `https://myplace121212-default-rtdb.firebaseio.com/myplaces.json?auth=${token}`
       );
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
 
       const resData = await response.json();
-      //console.log(resData);
       const loadedPlaces = [];
       for (const key in resData) {
         loadedPlaces.push(

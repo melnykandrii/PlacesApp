@@ -54,6 +54,12 @@ export const MapScreen = ({ navigation, route }) => {
   }, [dispatch, setError, setIsLoading]);
 
   useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error);
+    }
+  }, [error]);
+
+  useEffect(() => {
     loadPlacesHandler();
   }, [dispatch, loadPlacesHandler, setIsLoading]);
 

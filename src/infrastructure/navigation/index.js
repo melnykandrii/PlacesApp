@@ -5,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TabsNavigator } from "./tabs.navigator";
 import { StartupScreen } from "../../features/startup/screens/startup.screen";
 import { AuthStackNavigator } from "./auth-stack.navigator";
-import { TestScreen } from "../../features/test/test.screen";
 
 export const AppNavigator = () => {
   const isAuth = useSelector((state) => !!state.auth.token);

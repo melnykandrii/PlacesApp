@@ -88,8 +88,8 @@ export const AuthScreen = ({ navigation }) => {
       //navigation.navigate("Places");
     } catch (err) {
       setError(err.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(

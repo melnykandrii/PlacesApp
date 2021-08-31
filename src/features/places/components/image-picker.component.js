@@ -40,7 +40,7 @@ export const ImgPicker = (props) => {
     }
     const image = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      quality: 0.5,
+      quality: 0.3,
     });
     setPickedImage(image.uri);
     props.onImageTaken(image.uri);
@@ -53,7 +53,7 @@ export const ImgPicker = (props) => {
     }
     const image = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      quality: 0.5,
+      quality: 0.3,
     });
     setPickedImage(image.uri);
     props.onImageTaken(image.uri);
